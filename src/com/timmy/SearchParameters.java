@@ -2,14 +2,14 @@ package com.timmy;
 
 import java.util.Scanner;
 
-public class Search_Parameters
+public class SearchParameters
 {
     Scanner in = new Scanner(System.in);
 
     Fuel fuel;
     State state;
 
-    public Search_Parameters()
+    public SearchParameters()
     {
         this.fuel = new Fuel("");
         this.state = new State("");
