@@ -13,12 +13,12 @@ public class SearchParameters
     {
         this.fuel = new Fuel("");
         this.state = new State("");
-        this.init_parameters();
+//        this.init_parameters();
     }
 
     protected void init_parameters()
     {
-        this.fuel.set_fuel_type(in);
-        this.state.set_state(in);
+        this.fuel.setFuelType(in);
+        this.state.setState(in);
     }
 }

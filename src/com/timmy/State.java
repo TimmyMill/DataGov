@@ -6,21 +6,22 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 class State {
-    private ArrayList<String> statesList = new ArrayList<>(Arrays.asList(
-            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida",
-            "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine",
-            "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
-            "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
-            "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee",
-            "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming", "All"));
-    private ArrayList<String> statesAbbreviatedList = new ArrayList<>(Arrays.asList(
-            "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA",
-            "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK",
-            "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY", "all"));
+    private ArrayList<String> stateKeysList = new ArrayList<>(Arrays.asList(
+            "all", "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY",
+            "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH",
+            "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"));
+    private ArrayList<String> stateValuesList = new ArrayList<>(Arrays.asList(
+            "All", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+            "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+            "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana",
+            "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina",
+            "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+            "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia",
+            "Wisconsin", "Wyoming"));
     private SortedMap<String, String> statesMap;
 
-    public ArrayList<String> getStatesList()
-    { return statesList; }
+    public ArrayList<String> getStateValuesList()
+    { return stateValuesList; }
 
     protected String state;
 
@@ -28,34 +29,34 @@ class State {
     {
         this.state = state;
         this.statesMap = new TreeMap<>();
-        this.populate_states_map();
+        populateStatesMap();
     }
 
-    private void populate_states_map()
+    private void populateStatesMap()
     {
-        for (int i = 0; i < statesList.size(); i++)
+        for (int item = 0; item < stateValuesList.size(); item++)
         {
-            statesMap.put(statesAbbreviatedList.get(i), statesList.get(i));
+            statesMap.put(stateKeysList.get(item), stateValuesList.get(item));
         }
     }
 
-    protected void set_state(Scanner in)
+    protected void setState(Scanner in)
     {
 //        Scanner in = new Scanner(System.in);
-        show_states();
+        showStates();
         System.out.println("Select State: ");
         int choice = in.nextInt();
 
-        this.state = statesAbbreviatedList.get(choice - 1);
+        this.state = stateKeysList.get(choice - 1);
         System.out.println(this.state);
 
 //        in.close();
     }
 
-    private void show_states()
+    private void showStates()
     {
         int i = 0;
-        for (String j : statesList)
+        for (String j : stateValuesList)
         {
             i += 1;
             System.out.println(String.format("%d) %s", i, j));
