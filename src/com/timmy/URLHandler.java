@@ -33,6 +33,10 @@ public class URLHandler {
 
     private void RequestFuelStationData(String stringURL)
     {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(FuelStation.class, new FuelStationDeserializer());
+        Gson gson = gsonBuilder.create();
+
         try
         {
             URL url = new URL(stringURL);
@@ -41,16 +45,15 @@ public class URLHandler {
             try (InputStream responseStream = connection.getInputStream();
                  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(responseStream)))
             {
-                StringBuilder stringBuilder = new StringBuilder();
+//                StringBuilder stringBuilder = new StringBuilder();
+//
+//                while ((line = bufferedReader.readLine()) != null)
+//                {
+//                    stringBuilder.append(line);
+//                }
+//
+//                String response = stringBuilder.toString();
 
-                while ((line = bufferedReader.readLine()) != null)
-                {
-                    stringBuilder.append(line);
-                }
-
-                String response = stringBuilder.toString();
-
-                Gson gson = new GsonBuilder().create();
                 FuelStation station = gson.fromJson(bufferedReader, FuelStation.class);
                 System.out.println(station);
             }
