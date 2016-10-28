@@ -21,8 +21,6 @@ public class FuelStationDeserializer implements JsonDeserializer<FuelStation> {
 
         final JsonObject first = jsonStationsArray.get(0).getAsJsonObject();
         final String fuelTypeCode = first.get("fuel_type_code").getAsString();
-//        final JsonElement jsonFuelTypeCode = jsonObject.get("fuel_type_code");
-//        final String fuelTypeCode = jsonFuelTypeCode.getAsString();
 
         final String stationName = first.get("station_name").getAsString();
 
@@ -33,16 +31,6 @@ public class FuelStationDeserializer implements JsonDeserializer<FuelStation> {
         final String streetAddress = first.get("street_address").getAsString();
 
         final String zip = first.get("zip").getAsString();
-
-//        final JsonElement jsonStationName = jsonObject.get("station_name");
-//
-//        final JsonElement jsonCity = jsonObject.get("city");
-//
-//        final JsonElement jsonState = jsonObject.get("state");
-//
-//        final JsonElement jsonStreetAddress = jsonObject.get("street_address");
-//
-//        final JsonElement jsonZip = jsonObject.get("zip");
 
         final FuelStation fuelStation = new FuelStation();
         fuelStation.setFuelTypeCode(fuelTypeCode);
