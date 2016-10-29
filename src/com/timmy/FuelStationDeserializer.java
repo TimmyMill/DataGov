@@ -7,31 +7,45 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class FuelStationDeserializer implements JsonDeserializer<FuelStation> {
+public class FuelStationDeserializer implements JsonDeserializer<FuelStation>
+{
     @Override
     public FuelStation deserialize(final JsonElement json, final Type type, JsonDeserializationContext jdContext)
-            throws JsonParseException {
+            throws JsonParseException
+    {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray jsonStationsArray = jsonObject.getAsJsonArray("fuel_stations");
+
         final String[] stations = new String[jsonStationsArray.size()];
-//        for (int i = 0; i < stations.length; i++) {
-//            final JsonElement jsonElement = jsonStationsArray.get(i);
-//
-//        }
 
-        final JsonObject first = jsonStationsArray.get(0).getAsJsonObject();
-        final String fuelTypeCode = first.get("fuel_type_code").getAsString();
+        FuelStation fuelStation;
 
-        final String stationName = first.get("station_name").getAsString();
+        for (int index = 0; index < stations.length; index++)
+        {
+            final JsonObject station = jsonStationsArray.get(index).getAsJsonObject();
 
-        final String city = first.get("city").getAsString();
+            final String fuelTypeCode = station.get("fuel_type_code").getAsString();
 
-        final String state = first.get("state").getAsString();
+            final String stationName = station.get("station_name").getAsString();
 
-        final String streetAddress = first.get("street_address").getAsString();
+            final String city = station.get("city").getAsString();
 
-        final String zip = first.get("zip").getAsString();
+            final String state = station.get("state").getAsString();
 
+            final String streetAddress = station.get("street_address").getAsString();
+
+            final String zip = station.get("zip").getAsString();
+
+            fuelStation = buildFuelStation(fuelTypeCode, stationName, city, state, streetAddress, zip);
+
+        }
+
+        return fuelStation;
+    }
+
+    private FuelStation buildFuelStation(String fuelTypeCode, String city, String state, String stationName,
+                                         String streetAddress, String zip)
+    {
         final FuelStation fuelStation = new FuelStation();
         fuelStation.setFuelTypeCode(fuelTypeCode);
         fuelStation.setCity(city);
@@ -40,6 +54,7 @@ public class FuelStationDeserializer implements JsonDeserializer<FuelStation> {
         fuelStation.setStreetAddress(streetAddress);
         fuelStation.setZip(zip);
         return fuelStation;
+
     }
 
 }
