@@ -1,16 +1,19 @@
 package com.timmy;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+        import com.google.gson.Gson;
+        import com.google.gson.GsonBuilder;
+        import com.google.gson.reflect.TypeToken;
 
-import javax.swing.*;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+        import javax.swing.*;
+        import java.io.InputStream;
+        import java.io.BufferedReader;
+        import java.io.IOException;
+        import java.io.InputStreamReader;
+        import java.lang.reflect.Type;
+        import java.net.HttpURLConnection;
+        import java.net.MalformedURLException;
+        import java.net.URL;
+        import java.util.ArrayList;
 
 
 public class URLHandler {
@@ -34,7 +37,13 @@ public class URLHandler {
     private void RequestFuelStationData(String stringURL)
     {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(FuelStation.class, new FuelStationDeserializer());
+//        gsonBuilder.registerTypeAdapter(ArrayList.class, new FuelStationDeserializer());
+        Type stationType = new TypeToken<ArrayList<FuelStation>>() {}.getType();
+        gsonBuilder.registerTypeAdapter(stationType, new FuelStationDeserializer());
+
+//        gsonBuilder.registerTypeAdapter(FuelStation.class, new FuelStationDeserializer());
+
+
         Gson gson = gsonBuilder.create();
 
         try
@@ -54,8 +63,15 @@ public class URLHandler {
 //
 //                String response = stringBuilder.toString();
 
-                FuelStation station = gson.fromJson(bufferedReader, FuelStation.class);
-                System.out.println(station);
+//                Type fooType = new TypeToken<Foo<Bar>>() {}.getType();
+//                Type stationType = new TypeToken<ArrayList<FuelStation>>() {}.getType();
+                ArrayList<FuelStation> stations = gson.fromJson(bufferedReader, stationType);
+//                ArrayList tempList = gson.fromJson(bufferedReader, ArrayList.class);
+
+//                ArrayList<FuelStation> stations = gson.fromJson(bufferedReader, (Class<T>) FuelStation.class);
+
+//                tempList.forEach(System.out::println);
+                stations.forEach(System.out::println);
             }
 
             catch (IOException ioe)
@@ -66,7 +82,7 @@ public class URLHandler {
             catch (Exception e)
             {
                 System.out.println(e.getMessage());
-                System.out.println("");
+                e.printStackTrace();
             }
         }
 
