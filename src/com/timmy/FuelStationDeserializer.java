@@ -4,7 +4,6 @@ package com.timmy;
  */
 
 import com.google.gson.*;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -16,8 +15,6 @@ public class FuelStationDeserializer implements JsonDeserializer<ArrayList>
     {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray jsonStationsArray = jsonObject.getAsJsonArray("fuel_stations");
-
-//        final String[] stations = new String[jsonStationsArray.size()];
         final ArrayList<FuelStation> stations = new ArrayList<>();
 
         for (JsonElement stationElement : jsonStationsArray)

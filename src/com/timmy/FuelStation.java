@@ -48,14 +48,6 @@ public class FuelStation
     { this.zip = zip; }
 
     @Override
-    public String toString() {
-        return "FuelStation{" +
-                "fuel_type_code='" + fuelTypeCode + '\'' +
-                ", station_name='" + stationName + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", street_address='" + streetAddress + '\'' +
-                ", zip='" + zip + '\'' +
-                '}';
-    }
+    public String toString()
+    { return String.format("%s \t%s \t%s, %s %s", stationName, streetAddress, city, state, zip); }
 }
