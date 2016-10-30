@@ -9,8 +9,12 @@ public class UserInterface extends JFrame
 {
     private JPanel rootPanel;
     private JPanel northPanel;
-    private JComboBox<String> fuelComboBox;
+    private JComboBox<String> fuelTypeComboBox;
     private JComboBox<String> statesComboBox;
+    private JTextField cityTextField;
+    private JTextField zipTextField;
+    private JButton searchButton;
+    private JTextField stationNameTextField;
     private SearchParameters parameters;
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -29,8 +33,10 @@ public class UserInterface extends JFrame
         initStatesComboBox();
     }
 
+    private void initCity(){}
+
     private void initFuelComboBox()
-    { parameters.fuel.getFuelTypeValuesList().forEach(fuel -> fuelComboBox.addItem(fuel)); }
+    { parameters.fuel.getFuelTypeValuesList().forEach(fuel -> fuelTypeComboBox.addItem(fuel)); }
 
     private void initStatesComboBox()
     { parameters.state.getStateValuesList().forEach(state -> statesComboBox.addItem(state)); }
