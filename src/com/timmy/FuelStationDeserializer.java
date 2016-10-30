@@ -6,23 +6,23 @@ package com.timmy;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
-public class FuelStationDeserializer implements JsonDeserializer<FuelStation>
+public class FuelStationDeserializer implements JsonDeserializer<ArrayList>
 {
     @Override
-    public FuelStation deserialize(final JsonElement json, final Type type, JsonDeserializationContext jdContext)
+    public ArrayList<FuelStation> deserialize(final JsonElement json, final Type typeOfT, JsonDeserializationContext jdContext)
             throws JsonParseException
     {
         final JsonObject jsonObject = json.getAsJsonObject();
         final JsonArray jsonStationsArray = jsonObject.getAsJsonArray("fuel_stations");
 
-        final String[] stations = new String[jsonStationsArray.size()];
+//        final String[] stations = new String[jsonStationsArray.size()];
+        final ArrayList<FuelStation> stations = new ArrayList<>();
 
-        FuelStation fuelStation;
-
-        for (int index = 0; index < stations.length; index++)
+        for (JsonElement stationElement : jsonStationsArray)
         {
-            final JsonObject station = jsonStationsArray.get(index).getAsJsonObject();
+            final JsonObject station = stationElement.getAsJsonObject();
 
             final String fuelTypeCode = station.get("fuel_type_code").getAsString();
 
@@ -36,21 +36,20 @@ public class FuelStationDeserializer implements JsonDeserializer<FuelStation>
 
             final String zip = station.get("zip").getAsString();
 
-            fuelStation = buildFuelStation(fuelTypeCode, stationName, city, state, streetAddress, zip);
-
+            stations.add(buildFuelStation(fuelTypeCode, stationName, city, state, streetAddress, zip));
         }
 
-        return fuelStation;
+        return stations;
     }
 
-    private FuelStation buildFuelStation(String fuelTypeCode, String city, String state, String stationName,
+    private FuelStation buildFuelStation(String fuelTypeCode, String stationName, String city, String state,
                                          String streetAddress, String zip)
     {
         final FuelStation fuelStation = new FuelStation();
         fuelStation.setFuelTypeCode(fuelTypeCode);
+        fuelStation.setStationName(stationName);
         fuelStation.setCity(city);
         fuelStation.setState(state);
-        fuelStation.setStationName(stationName);
         fuelStation.setStreetAddress(streetAddress);
         fuelStation.setZip(zip);
         return fuelStation;
