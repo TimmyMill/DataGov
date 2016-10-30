@@ -57,6 +57,7 @@ public class URLHandler {
 
         Gson gson = gsonBuilder.create();
 
+
         try
         {
             URL url = new URL(stringURL);
@@ -65,8 +66,12 @@ public class URLHandler {
             try (InputStream responseStream = connection.getInputStream();
                  BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(responseStream)))
             {
-                ArrayList<FuelStation> stations = gson.fromJson(bufferedReader, stationType);
+                ArrayList<FuelStation>stations = gson.fromJson(bufferedReader, stationType);
                 stations.forEach(System.out::println);
+
+                // Pass each FuelStation object as a parameter into the method from the Database class, which will
+                // add them to the database
+                stations.forEach(Database::addToFuelStations);
             }
 
             catch (IOException ioe)
@@ -79,6 +84,7 @@ public class URLHandler {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
+
         }
 
         catch (MalformedURLException mue)
@@ -90,6 +96,8 @@ public class URLHandler {
         {
             System.out.println("Ioe");
         }
+
+
 
     }
 }
