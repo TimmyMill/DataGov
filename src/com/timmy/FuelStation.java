@@ -2,14 +2,22 @@ package com.timmy;
 
 public class FuelStation
 {
+    private int id;
     private String fuelTypeCode;
     private String stationName;
+    private String stationPhone;
     private String city;
     private String state;
     private String streetAddress;
     private String zip;
 
     public FuelStation() {}
+
+    public int getId()
+    { return id; }
+
+    public void setId(int id)
+    { this.id = id; }
 
     public String getFuelTypeCode()
     { return fuelTypeCode; }
@@ -22,6 +30,12 @@ public class FuelStation
 
     public void setStationName(String stationName)
     { this.stationName = stationName; }
+
+    public String getStationPhone()
+    { return stationPhone; }
+
+    public void setStationPhone(String stationPhone)
+    { this.stationPhone = stationPhone; }
 
     public String getCity()
     { return city; }
@@ -49,5 +63,7 @@ public class FuelStation
 
     @Override
     public String toString()
-    { return String.format("%s \t%s \t%s, %s %s", stationName, streetAddress, city, state, zip); }
+    {
+        return String.format("%s \t%s \t%s, %s %s", stationName, streetAddress, city, state, zip);
+    }
 }

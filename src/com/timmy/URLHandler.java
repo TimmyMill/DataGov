@@ -3,13 +3,12 @@ package com.timmy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.mysql.jdbc.Buffer;
-
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -37,7 +36,6 @@ public class URLHandler {
     protected void get()
     {
         String initialURL = "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?api_key=";
-        System.out.println("");
         stringURL = initialURL + KEY + "&fuel_type=E85" + "&state=MN&limit=10";
 //        System.out.println(stringURL);
         RequestFuelStationData(stringURL);
@@ -46,6 +44,7 @@ public class URLHandler {
     public static void main(String[] args)
     {
         URLHandler urlHandler = new URLHandler();
+        Database db = new Database();
         urlHandler.get();
     }
 
@@ -72,12 +71,15 @@ public class URLHandler {
                 // Pass each FuelStation object as a parameter into the method from the Database class, which will
                 // add them to the database
                 stations.forEach(Database::addToFuelStations);
+
             }
 
             catch (IOException ioe)
             {
                 System.out.println(ioe.getMessage());
             }
+
+
 
             catch (Exception e)
             {

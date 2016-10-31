@@ -3,6 +3,9 @@ package com.timmy;
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 
 public class UserInterface extends JFrame
@@ -16,6 +19,10 @@ public class UserInterface extends JFrame
     private JButton searchButton;
     private JTextField stationNameTextField;
     private SearchParameters parameters;
+    private DefaultTableModel tableModel;
+    private ListSelectionModel tableListModel;
+    private DefaultTableColumnModel columnModel;
+    private TableRowSorter<DefaultTableModel> rowSorter;
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public UserInterface(SearchParameters parameters)
@@ -31,6 +38,16 @@ public class UserInterface extends JFrame
         this.parameters = parameters;
         initFuelComboBox();
         initStatesComboBox();
+
+        /* JTable Settings
+        */
+
+        //Table Model
+        tableModel = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
     }
 
     private void initCity(){}

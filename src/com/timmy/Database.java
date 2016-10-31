@@ -22,7 +22,7 @@ public class Database
     protected void loadDriver()
     {
         try
-        { Class.forName(JDBC); }
+        { Class.forName("org.sqlite.JDBC"); }
 
         catch (ClassNotFoundException cnfe)
         {
@@ -37,9 +37,11 @@ public class Database
         try (SQLiteConnection sqlConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
         {
             String createTableSQL =
-                    "CREATE TABLE IF NOT EXISTS fuel_stations " +
-                            "(fuel_type TEXT, " +
+                    "CREATE TABLE IF NOT EXISTS fuel_stations( " +
+                            "id INTEGER UNIQUE NOT NULL," +
+                            "fuel_type TEXT, " +
                             "station_name TEXT, " +
+                            "station_phone TEXT, " +
                             "city TEXT, " +
                             "state TEXT, " +
                             "street TEXT, " +
@@ -50,36 +52,52 @@ public class Database
         }
 
         catch (SQLException e)
-        { e.printStackTrace(); }
+        {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
     }
 
     protected static void addToFuelStations(FuelStation station)
     {
-        String preparedString = "INSERT INTO fuel_stations VALUES (?, ?, ?, ?, ?, ?)";
-        try (SQLiteConnection sqlConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
+        String preparedString = "INSERT INTO fuel_stations VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try
+                (SQLiteConnection sqlConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
         {
             preparedStatement = sqlConn.prepareStatement(preparedString);
-            preparedStatement.setString(1, station.getFuelTypeCode());
-            preparedStatement.setString(2, station.getStationName());
-            preparedStatement.setString(3, station.getCity());
-            preparedStatement.setString(4, station.getState());
-            preparedStatement.setString(5, station.getStreetAddress());
-            preparedStatement.setString(6, station.getZip());
+            preparedStatement.setInt(1, station.getId());
+            preparedStatement.setString(2, station.getFuelTypeCode());
+            preparedStatement.setString(3, station.getStationName());
+            preparedStatement.setString(4, station.getStationPhone());
+            preparedStatement.setString(5, station.getCity());
+            preparedStatement.setString(6, station.getState());
+            preparedStatement.setString(7, station.getStreetAddress());
+            preparedStatement.setString(8, station.getZip());
             preparedStatement.executeUpdate();
         }
+
+        catch (SQLIntegrityConstraintViolationException constraintException)
+        {
+//            constraintException.addSuppressed(new SQLIntegrityConstraintViolationException());
+            System.out.println("Unique");
+        }
+
         catch (SQLException e)
-        { e.printStackTrace(); }
+        {
+            System.out.println(String.format("%s %d",e.getMessage(), e.getErrorCode()));
+        }
+
 
     }
 
 
 
-    public static void main(String[] args)
-    {
-        Database db = new Database();
-        db.loadDriver();
-        db.initDB();
-    }
+//    public static void main(String[] args)
+//    {
+//        Database db = new Database();
+//        db.loadDriver();
+//        db.initDB();
+//    }
 
 
 }
