@@ -8,6 +8,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 import java.util.ArrayList;
 
 public class UserInterface extends JFrame
@@ -27,27 +29,26 @@ public class UserInterface extends JFrame
     private ListSelectionModel tableListModel;
     private DefaultTableColumnModel columnModel;
     private TableRowSorter<DefaultTableModel> rowSorter;
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private Dimension screenSize;
 
     private URLHandler urlHandler;
     private SearchParameters parameters;
 
     public UserInterface(URLHandler urlHandler, SearchParameters parameters)
     {
-        super("Alternative Fuel Stations");
-
         this.urlHandler = urlHandler;
         this.parameters = parameters;
-        //JFrame Settings
-        setContentPane(rootPanel);
-        setVisible(true);
-
-
-        setPreferredSize(screenSize);
-        pack();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         initUI();
+
+        //JFrame Settings
+        setTitle("Alternative Fuel Stations");
+        setPreferredSize(screenSize);
+        setContentPane(rootPanel);
+        pack();
+        setLocationRelativeTo(null); // centers JFrame
+        setVisible(true);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /*
          JTable Settings
@@ -102,7 +103,11 @@ public class UserInterface extends JFrame
             System.out.println(String.format("State: %s, Index: %d", cb.getSelectedItem().toString(),cb.getSelectedIndex()));
         });
 
+        // Search Button Action Listener
         searchButton.addActionListener(event -> {
+            System.out.println(String.format("Station Height %d Width %d", stationNameTextField.getHeight(), stationNameTextField.getWidth()));
+            System.out.println(String.format("City Height %d Width %d", cityTextField.getHeight(), cityTextField.getWidth()));
+            System.out.println(String.format("Zip Height %d Width %d", zipTextField.getHeight(), zipTextField.getWidth()));
             if (fuelTypeComboBox.getSelectedIndex() != 0 && statesComboBox.getSelectedIndex() != 0)
             {
 //                parameters.state.getState(statesComboBox.getSelectedIndex());
@@ -113,11 +118,28 @@ public class UserInterface extends JFrame
                 addRowsToTable(urlHandler.db.searchFuelStations(fuelType, state));
             }
         });
+
+        /*TODO: Add code to listen to text fields and get what the user is typing. Can use this to handle errors and
+        to show descriptive text in each text box describing what to enter
+        */
+
+        stationNameTextField.addInputMethodListener(new InputMethodListener() {
+            @Override
+            public void inputMethodTextChanged(InputMethodEvent event) {
+
+            }
+
+            @Override
+            public void caretPositionChanged(InputMethodEvent event) {
+
+            }
+        });
     }
 
     private void initUI()
     {
-        urlHandler.get();
+//        urlHandler.get();
+        setScreenSize();
         initFuelComboBox();
         initStatesComboBox();
     }
@@ -132,6 +154,16 @@ public class UserInterface extends JFrame
     {
         statesComboBox.addItem("Select State");
         parameters.state.getStateValuesList().forEach(state -> statesComboBox.addItem(state));
+    }
+
+    private void setScreenSize()
+    {
+        // initialize using the dimensions of the screen size
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // for both height and width, we want 75% of the actual screen size
+        Double width = screenSize.getWidth() * 0.75;
+        Double height = screenSize.getHeight() * 0.75;
+        screenSize.setSize(width, height);
     }
 
     private void addRowsToTable(ArrayList<FuelStation> stations)
