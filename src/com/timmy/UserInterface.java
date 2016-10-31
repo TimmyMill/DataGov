@@ -8,10 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public class UserInterface extends JFrame
@@ -46,11 +42,12 @@ public class UserInterface extends JFrame
         setContentPane(rootPanel);
         setVisible(true);
 
+
         setPreferredSize(screenSize);
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        init();
+        initUI();
 
         /*
          JTable Settings
@@ -118,7 +115,7 @@ public class UserInterface extends JFrame
         });
     }
 
-    private void init()
+    private void initUI()
     {
         urlHandler.get();
         initFuelComboBox();

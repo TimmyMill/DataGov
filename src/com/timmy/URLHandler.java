@@ -42,7 +42,7 @@ public class URLHandler {
     protected void get()
     {
         String initialURL = "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?api_key=";
-        stringURL = initialURL + KEY + "&fuel_type=E85" + "&state=MN&limit=10";
+        stringURL = initialURL + KEY + "&fuel_type=E85" + "&state=MN&limit=100";
 //        System.out.println(stringURL);
         RequestFuelStationData(stringURL);
     }

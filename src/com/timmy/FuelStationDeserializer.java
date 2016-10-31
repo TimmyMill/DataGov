@@ -1,6 +1,7 @@
 package com.timmy;
-/*
- http://www.javacreed.com/gson-deserialiser-example/
+/**
+ * Code created with the help of this tutorial:
+ *      http://www.javacreed.com/gson-deserialiser-example/
  */
 
 import com.google.gson.*;
@@ -17,8 +18,7 @@ public class FuelStationDeserializer implements JsonDeserializer<ArrayList>
         final JsonArray jsonStationsArray = jsonObject.getAsJsonArray("fuel_stations");
         final ArrayList<FuelStation> stations = new ArrayList<>();
 
-        for (JsonElement stationElement : jsonStationsArray)
-        {
+        for (JsonElement stationElement : jsonStationsArray) {
             final JsonObject station = stationElement.getAsJsonObject();
 
             final String fuelTypeCode = station.get("fuel_type_code").getAsString();
@@ -27,7 +27,10 @@ public class FuelStationDeserializer implements JsonDeserializer<ArrayList>
 
             final String stationName = station.get("station_name").getAsString();
 
-            final String stationPhone = station.get("station_phone").getAsString();
+            // Because we know this value can be null, we test it before trying to assign a string value
+            final String stationPhone = station.get("station_phone").isJsonNull() ?
+                    // Null : Not Null
+                    "Unlisted" : station.get("station_phone").getAsString();
 
             final String city = station.get("city").getAsString();
 
@@ -37,14 +40,17 @@ public class FuelStationDeserializer implements JsonDeserializer<ArrayList>
 
             final String zip = station.get("zip").getAsString();
 
-            stations.add(buildFuelStation(id, fuelTypeCode, stationName, stationPhone, city, state, streetAddress, zip));
+            stations.add(buildFuelStation(id, fuelTypeCode, stationName, stationPhone,
+                    city, state, streetAddress, zip));
+
         }
+
 
         return stations;
     }
 
-    private FuelStation buildFuelStation(int id, String fuelTypeCode, String stationName, String stationPhone, String city, String state,
-                                         String streetAddress, String zip)
+    private FuelStation buildFuelStation(int id, String fuelTypeCode, String stationName, String stationPhone,
+                                         String city, String state, String streetAddress, String zip)
     {
         final FuelStation fuelStation = new FuelStation();
         fuelStation.setId(id);

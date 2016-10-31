@@ -1,7 +1,5 @@
 package com.timmy;
 
-import java.lang.reflect.Array;
-
 public class FuelStation
 {
     private int id;
@@ -63,6 +61,7 @@ public class FuelStation
     public void setZip(String zip)
     { this.zip = zip; }
 
+    // Used to return a mixed Array of objects that can be used to create a row to insert into UI table
     protected Object[] toArray()
     {
         return new Object[] {
