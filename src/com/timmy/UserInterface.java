@@ -138,7 +138,7 @@ public class UserInterface extends JFrame
 
     private void initUI()
     {
-//        urlHandler.get();
+        urlHandler.get();
         setScreenSize();
         initFuelComboBox();
         initStatesComboBox();

@@ -63,8 +63,8 @@ public class Database
     protected void addToFuelStations(FuelStation station)
     {
         String preparedString = "INSERT INTO fuel_stations VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try
-                (SQLiteConnection sqlConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
+
+        try (SQLiteConnection sqlConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
         {
             preparedStatement = sqlConn.prepareStatement(preparedString);
             preparedStatement.setInt(1, station.getId());
@@ -92,13 +92,33 @@ public class Database
 
     }
 
+    protected Boolean uniqueKeyExists(int id)
+    {
+        ResultSet rs;
+        Boolean exists = true;
+        String getID = "SELECT id FROM fuel_stations WHERE id = ?";
+
+        try (SQLiteConnection sqLiteConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
+        {
+            preparedStatement = sqLiteConn.prepareStatement(getID);
+            preparedStatement.setInt(1, id);
+            rs = preparedStatement.executeQuery();
+            exists = rs.next();
+        }
+
+        catch (SQLException sqle)
+        { sqle.getErrorCode(); }
+
+        return exists;
+    }
+
     protected ArrayList<FuelStation> searchFuelStations(String fuelType, String state)
     {
         ArrayList<FuelStation> stations = new ArrayList<>();
         ResultSet rs;
         String queryString = "SELECT * FROM fuel_stations WHERE fuel_type = ? AND state = ?";
-        try
-                (SQLiteConnection sqLiteConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
+
+        try (SQLiteConnection sqLiteConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
         {
             preparedStatement = sqLiteConn.prepareStatement(queryString);
             preparedStatement.setString(1, fuelType);

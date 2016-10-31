@@ -8,7 +8,6 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -41,6 +40,7 @@ public class URLHandler {
 
     protected void get()
     {
+        //TODO: Use parameters to take dynamic input from the User
         String initialURL = "https://developer.nrel.gov/api/alt-fuel-stations/v1.json?api_key=";
         stringURL = initialURL + KEY + "&fuel_type=E85" + "&state=MN&limit=100";
 //        System.out.println(stringURL);
@@ -69,7 +69,10 @@ public class URLHandler {
 
                 // Pass each FuelStation object as a parameter into the method from the Database class,
                 // which will add them to the database
-                stations.forEach(station -> db.addToFuelStations(station));
+                // Check to se
+                stations.forEach(station -> {
+                    if (!db.uniqueKeyExists(station.getId())) { db.addToFuelStations(station); }
+                });
             }
 
             catch (IOException ioe)
