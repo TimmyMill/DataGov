@@ -1,6 +1,8 @@
 package com.timmy;
 
 import java.sql.*;
+import java.util.ArrayList;
+
 import org.sqlite.*;
 
 public class Database
@@ -58,7 +60,7 @@ public class Database
         }
     }
 
-    protected static void addToFuelStations(FuelStation station)
+    protected void addToFuelStations(FuelStation station)
     {
         String preparedString = "INSERT INTO fuel_stations VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try
@@ -90,15 +92,51 @@ public class Database
 
     }
 
+    protected ArrayList<FuelStation> searchFuelStations(String fuelType, String state)
+    {
+        ArrayList<FuelStation> stations = new ArrayList<>();
+        ResultSet rs;
+        String queryString = "SELECT * FROM fuel_stations WHERE fuel_type = ? AND state = ?";
+        try
+                (SQLiteConnection sqLiteConn = (SQLiteConnection) DriverManager.getConnection(DB_CONNECTION_URL))
+        {
+            preparedStatement = sqLiteConn.prepareStatement(queryString);
+            preparedStatement.setString(1, fuelType);
+            preparedStatement.setString(2, state);
+            rs = preparedStatement.executeQuery();
 
+            if (!rs.next()) System.out.println("No Results Found");
+            //TODO Add something to the GUI that displays when no results are found
+            while(rs.next())
+            {
+                FuelStation station = getFuelStation(rs);
+                stations.add(station);
+            }
+        }
 
-//    public static void main(String[] args)
-//    {
-//        Database db = new Database();
-//        db.loadDriver();
-//        db.initDB();
-//    }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
 
+        return stations;
+    }
+
+    private FuelStation getFuelStation(ResultSet rs) throws SQLException
+    {
+        FuelStation station = new FuelStation();
+
+            station.setId(rs.getInt(1));
+            station.setFuelTypeCode(rs.getString(2));
+            station.setStationName(rs.getString(3));
+            station.setStationPhone(rs.getString(4));
+            station.setCity(rs.getString(5));
+            station.setState(rs.getString(6));
+            station.setStreetAddress(rs.getString(7));
+            station.setZip(rs.getString(8));
+
+        return station;
+    }
 
 }
 //    String sql = "CREATE TABLE IF NOT EXISTS fuel_stations (fuel_type VARCHAR(50), station_name VARCHAR(75), " +

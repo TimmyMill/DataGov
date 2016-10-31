@@ -19,11 +19,17 @@ class Fuel
 
     protected String fuelType;
 
-    protected Fuel(String fuel_type)
+    protected Fuel()
     {
-        this.fuelType = fuel_type;
         this.fuelTypeMap = new TreeMap<>();
         populateFuelTypeMap();
+    }
+
+    protected String getFuelType(int index)
+    {
+        // The index being passed in comes from the UI class
+        return fuelTypeKeysList.get(index - 1);
+//        System.out.println(fuelType);
     }
 
     protected void setFuelType(Scanner in)

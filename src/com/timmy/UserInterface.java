@@ -8,6 +8,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public class UserInterface extends JFrame
@@ -21,19 +25,23 @@ public class UserInterface extends JFrame
     private JButton searchButton;
     private JTextField stationNameTextField;
     private JPanel centerPanel;
-    private JTable stationDataTable;
     private JScrollPane tableScrollPane;
-    private SearchParameters parameters;
+    private JTable stationDataTable;
     private DefaultTableModel tableModel;
     private ListSelectionModel tableListModel;
     private DefaultTableColumnModel columnModel;
     private TableRowSorter<DefaultTableModel> rowSorter;
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    public UserInterface(SearchParameters parameters)
+    private URLHandler urlHandler;
+    private SearchParameters parameters;
+
+    public UserInterface(URLHandler urlHandler, SearchParameters parameters)
     {
         super("Alternative Fuel Stations");
 
+        this.urlHandler = urlHandler;
+        this.parameters = parameters;
         //JFrame Settings
         setContentPane(rootPanel);
         setVisible(true);
@@ -42,11 +50,10 @@ public class UserInterface extends JFrame
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        this.parameters = parameters;
-        initFuelComboBox();
-        initStatesComboBox();
+        init();
 
-        /* JTable Settings
+        /*
+         JTable Settings
         */
 
         //Table Model
@@ -57,21 +64,11 @@ public class UserInterface extends JFrame
         };
 
         //Create columns
-        String[] columnHeadings = {"Station Name", "Fuel Types", "Phone", "Address", "City", "State", "Zipcode"};
+        String[] columnHeadings = {"ID", "Station Name", "Fuel Types", "Phone", "Address", "City", "State", "Zipcode"};
         tableModel.setColumnIdentifiers(columnHeadings); //use a string array to give each column a name
 
-//        //Create rows
-//        if (Database.getLibraryList() != null) {
-//            for (AudioFile file : Database.getLibraryList()) { //iterate the library list created in Database
-////            tableModel.addRow(file.getSongInfo().toArray());
-//                ArrayList<String> lst = file.getSongInfo();
-//                lst.add(file.getPath());
-//                Object[] str = lst.toArray();
-//                tableModel.addRow(str);
-//            /* for each audio file, use the getSongInfo method to extract the metadata and then add it to an array */
-//            /* use the array to add a new row to the table */
-//            }
-//        }
+        //Create rows
+
 
         //Table List Model
         tableListModel = new DefaultListSelectionModel();
@@ -90,16 +87,56 @@ public class UserInterface extends JFrame
 
         stationDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         stationDataTable.setRowSelectionAllowed(true);
-        final TableColumn filePathColumn = stationDataTable.getColumnModel().getColumn(3);
-        stationDataTable.getColumnModel().removeColumn(filePathColumn);
+        // Creates a reference to the first column in the table so we can remove it from the column model
+        final TableColumn stationIDColumn = stationDataTable.getColumnModel().getColumn(0);
+        stationDataTable.getColumnModel().removeColumn(stationIDColumn); // column still exists, just isn't displayed
 
+        /*
+         Event Listeners
+        */
+
+        fuelTypeComboBox.addItemListener(event -> {
+                JComboBox cb = (JComboBox) event.getSource();
+                System.out.println(String.format("Fuel Type: %s, Index: %d", cb.getSelectedItem().toString(),cb.getSelectedIndex()));
+        });
+
+        statesComboBox.addItemListener(event -> {
+            JComboBox cb = (JComboBox) event.getSource();
+            System.out.println(String.format("State: %s, Index: %d", cb.getSelectedItem().toString(),cb.getSelectedIndex()));
+        });
+
+        searchButton.addActionListener(event -> {
+            if (fuelTypeComboBox.getSelectedIndex() != 0 && statesComboBox.getSelectedIndex() != 0)
+            {
+//                parameters.state.getState(statesComboBox.getSelectedIndex());
+                String fuelType = parameters.fuel.getFuelType(fuelTypeComboBox.getSelectedIndex());
+                String state = parameters.state.getState(statesComboBox.getSelectedIndex());
+
+                //
+                addRowsToTable(urlHandler.db.searchFuelStations(fuelType, state));
+            }
+        });
     }
 
-    private void initCity(){}
+    private void init()
+    {
+        urlHandler.get();
+        initFuelComboBox();
+        initStatesComboBox();
+    }
 
     private void initFuelComboBox()
-    { parameters.fuel.getFuelTypeValuesList().forEach(fuel -> fuelTypeComboBox.addItem(fuel)); }
+    {
+        fuelTypeComboBox.addItem("Select Fuel Type");
+        parameters.fuel.getFuelTypeValuesList().forEach(fuel -> fuelTypeComboBox.addItem(fuel));
+    }
 
     private void initStatesComboBox()
-    { parameters.state.getStateValuesList().forEach(state -> statesComboBox.addItem(state)); }
+    {
+        statesComboBox.addItem("Select State");
+        parameters.state.getStateValuesList().forEach(state -> statesComboBox.addItem(state));
+    }
+
+    private void addRowsToTable(ArrayList<FuelStation> stations)
+    { stations.forEach(station -> tableModel.addRow(station.toArray())); }
 }

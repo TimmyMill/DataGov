@@ -24,6 +24,7 @@
             </constraints>
             <properties>
               <model/>
+              <name value="Fuel Types"/>
             </properties>
           </component>
           <component id="45060" class="javax.swing.JTextField" binding="cityTextField">

@@ -15,6 +15,12 @@ import java.util.ArrayList;
 public class URLHandler {
     String stringURL = "";
     private final String KEY = getKey();
+    protected Database db;
+
+    protected URLHandler(Database db)
+    {
+        this.db = db;
+    }
 
     private String getKey()
     {
@@ -41,13 +47,6 @@ public class URLHandler {
         RequestFuelStationData(stringURL);
     }
 
-    public static void main(String[] args)
-    {
-        URLHandler urlHandler = new URLHandler();
-        Database db = new Database();
-        urlHandler.get();
-    }
-
     private void RequestFuelStationData(String stringURL)
     {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -68,10 +67,9 @@ public class URLHandler {
                 ArrayList<FuelStation>stations = gson.fromJson(bufferedReader, stationType);
                 stations.forEach(System.out::println);
 
-                // Pass each FuelStation object as a parameter into the method from the Database class, which will
-                // add them to the database
-                stations.forEach(Database::addToFuelStations);
-
+                // Pass each FuelStation object as a parameter into the method from the Database class,
+                // which will add them to the database
+                stations.forEach(station -> db.addToFuelStations(station));
             }
 
             catch (IOException ioe)
@@ -98,8 +96,6 @@ public class URLHandler {
         {
             System.out.println("Ioe");
         }
-
-
 
     }
 }

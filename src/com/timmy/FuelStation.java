@@ -1,5 +1,7 @@
 package com.timmy;
 
+import java.lang.reflect.Array;
+
 public class FuelStation
 {
     private int id;
@@ -60,6 +62,13 @@ public class FuelStation
 
     public void setZip(String zip)
     { this.zip = zip; }
+
+    protected Object[] toArray()
+    {
+        return new Object[] {
+                getId(), getStationName(), getFuelTypeCode(), getStationPhone(), getStreetAddress(), getCity(),
+                getState(), getZip()};
+    }
 
     @Override
     public String toString()

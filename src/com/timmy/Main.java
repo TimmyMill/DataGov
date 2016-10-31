@@ -4,7 +4,6 @@ public class Main
 {
     public static void main(String args[])
     {
-        SearchParameters query = new SearchParameters();
-        UserInterface ui = new UserInterface(query);
+        new UserInterface(new URLHandler(new Database()), new SearchParameters());
     }
 }
